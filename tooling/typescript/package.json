@@ -1,0 +1,11 @@
+{
+  "name": "@samyx/typescript",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "typescript": "^5.8.2"
+  },
+  "exports": {
+    ".": "./tsconfig.json"
+  }
+}

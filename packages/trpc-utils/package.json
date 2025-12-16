@@ -1,0 +1,43 @@
+{
+  "name": "@samyx/trpc-utils",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samimishal/samyx-utilities.git",
+    "directory": "packages/filters"
+  },
+  "homepage": "https://github.com/samimishal/samyx-utilities#readme",
+  "bugs": {
+    "url": "https://github.com/samimishal/samyx-utilities/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "clean": "git clean -xdf .next .turbo node_modules out dist",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "test:coverage": "bun vitest run --coverage"
+  },
+  "peerDependencies": {
+    "@trpc/client": "^10.0.0 || ^11.0.0",
+    "@trpc/server": "^10.0.0 || ^11.0.0"
+  },
+  "devDependencies": {
+    "@samyx/typescript": "workspace:*",
+    "@types/node": "^22.15.21",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.2"
+  }
+}

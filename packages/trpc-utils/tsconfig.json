@@ -1,0 +1,7 @@
+{
+  "extends": "@samyx/typescript",
+  "compilerOptions": {
+    "module": "ES2015",
+    "moduleResolution": "bundler"
+  }
+}

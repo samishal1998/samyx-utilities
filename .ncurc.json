@@ -1,0 +1,3 @@
+{
+  "reject": ["@neondatabase/serverless", "drizzle-orm", "drizzle-zod"]
+}
