@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:test="urn:test:simple"
+           targetNamespace="urn:test:simple"
+           elementFormDefault="qualified">
+
+  <!-- Simple type with enumeration -->
+  <xs:simpleType name="statusType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="active"/>
+      <xs:enumeration value="inactive"/>
+      <xs:enumeration value="pending"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Simple type with pattern -->
+  <xs:simpleType name="codeType">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Z]{2,3}"/>
+      <xs:minLength value="2"/>
+      <xs:maxLength value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Complex type with sequence -->
+  <xs:complexType name="personType">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="email" type="xs:string" minOccurs="0"/>
+      <xs:element name="status" type="test:statusType"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- Complex type with choice -->
+  <xs:complexType name="contactType">
+    <xs:choice>
+      <xs:element name="phone" type="xs:string"/>
+      <xs:element name="email" type="xs:string"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <!-- Global element with inline type -->
+  <xs:element name="greeting">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="message" type="xs:string"/>
+      </xs:sequence>
+      <xs:attribute name="lang" type="xs:language" default="en"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Global element referencing complex type -->
+  <xs:element name="person" type="test:personType"/>
+
+  <!-- Element with array children -->
+  <xs:element name="people">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="test:person" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

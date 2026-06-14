@@ -30,8 +30,5 @@
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "sami",
-    "samyx"
-  ]
+  "cSpell.words": ["sami", "samyx"]
 }

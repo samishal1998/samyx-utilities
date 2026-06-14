@@ -1,14 +1,22 @@
 import { observable } from '@trpc/server/observable';
-import { TRPCClientError, type TRPCLink, type OperationLink } from '@trpc/client';
+import {
+  TRPCClientError,
+  type TRPCLink,
+  type OperationLink,
+} from '@trpc/client';
 import type { AnyRouter } from '@trpc/server';
 import { createChain } from './create-chain';
-import type { SwitchLinkOptions, SwitchLinkSelectorContext, LinkOrLinks } from './types';
+import type {
+  SwitchLinkOptions,
+  SwitchLinkSelectorContext,
+  LinkOrLinks,
+} from './types';
 
 /**
  * Converts a single link or array of links to an array.
  */
 function asArray<TRouter extends AnyRouter>(
-  value: LinkOrLinks<TRouter>
+  value: LinkOrLinks<TRouter>,
 ): TRPCLink<TRouter>[] {
   return Array.isArray(value) ? value : [value];
 }
@@ -84,9 +92,9 @@ export function switchLink<
             TRPCClientError.from(
               new Error(
                 `switchLink: selector returned unknown key "${selectedKey}". ` +
-                  `Valid keys are: ${validKeys}`
-              )
-            )
+                  `Valid keys are: ${validKeys}`,
+              ),
+            ),
           );
           return;
         }
@@ -98,4 +106,8 @@ export function switchLink<
   };
 }
 
-export type { SwitchLinkOptions, SwitchLinkSelectorContext, LinkOrLinks } from './types.js';
+export type {
+  SwitchLinkOptions,
+  SwitchLinkSelectorContext,
+  LinkOrLinks,
+} from './types.js';

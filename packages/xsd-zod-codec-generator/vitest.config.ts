@@ -2,8 +2,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  plugins: [tsconfigPaths() as any],
+  plugins: [tsconfigPaths()],
   test: {
     include: ['**/__tests__/*.test.ts'],
     exclude: ['**/node_modules/**', '**/dist/**'],

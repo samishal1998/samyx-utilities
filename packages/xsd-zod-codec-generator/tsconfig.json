@@ -1,0 +1,7 @@
+{
+  "extends": "@samyx/typescript",
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  },
+  "include": ["src/**/*.ts", "index.ts"]
+}

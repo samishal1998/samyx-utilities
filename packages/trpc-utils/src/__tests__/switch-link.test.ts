@@ -20,7 +20,7 @@ const createMockLink = <T>(response: T): TRPCLink<MockRouter> => {
 // Helper to create a mock operation
 const createMockOp = (
   path: string,
-  context: Record<string, unknown> = {}
+  context: Record<string, unknown> = {},
 ): Operation => ({
   id: 1,
   type: 'query',
@@ -38,7 +38,8 @@ describe('switchLink', () => {
     const linkB = vi.fn(createMockLink('response-b'));
 
     const link = switchLink<MockRouter, RouteKey>({
-      select: ({ path }: { path: string }) => (path.startsWith('routerA') ? 'a' : 'b'),
+      select: ({ path }: { path: string }) =>
+        path.startsWith('routerA') ? 'a' : 'b',
       cases: { a: linkA, b: linkB },
     });
 
@@ -183,7 +184,9 @@ describe('switchLink', () => {
     });
 
     expect(results.length).toBe(1);
-    expect((results[0] as { result: { data: unknown } }).result.data).toEqual(expectedData);
+    expect((results[0] as { result: { data: unknown } }).result.data).toEqual(
+      expectedData,
+    );
   });
 
   it('should forward errors from selected link', async () => {
@@ -264,7 +267,9 @@ describe('switchLink', () => {
     const secondLink: TRPCLink<MockRouter> = () => () =>
       observable((observer) => {
         executionOrder.push('second');
-        observer.next({ result: { type: 'data', data: 'chained-response' } } as never);
+        observer.next({
+          result: { type: 'data', data: 'chained-response' },
+        } as never);
         observer.complete();
         return () => {};
       });
@@ -295,7 +300,9 @@ describe('switchLink', () => {
     // Both links should have executed in order
     expect(executionOrder).toEqual(['first', 'second']);
     expect(results.length).toBe(1);
-    expect((results[0] as { result: { data: string } }).result.data).toBe('chained-response');
+    expect((results[0] as { result: { data: string } }).result.data).toBe(
+      'chained-response',
+    );
   });
 
   it('should support mixed single and array cases', () => {
@@ -306,7 +313,8 @@ describe('switchLink', () => {
     const arrayLink2 = vi.fn(createMockLink('array2'));
 
     const link = switchLink<MockRouter, RouteKey>({
-      select: ({ path }: { path: string }) => (path.startsWith('single') ? 'single' : 'array'),
+      select: ({ path }: { path: string }) =>
+        path.startsWith('single') ? 'single' : 'array',
       cases: {
         single: singleLink,
         array: [arrayLink1, arrayLink2],

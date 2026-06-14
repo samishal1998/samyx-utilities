@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import type { RouterNames, RequiredRouterMapping, PartialRouterMapping } from '../router-utils';
+import type {
+  RouterNames,
+  RequiredRouterMapping,
+  PartialRouterMapping,
+} from '../router-utils';
 import type { AnyRouter } from '@trpc/server';
 
 // Mock AppRouter type for testing type inference

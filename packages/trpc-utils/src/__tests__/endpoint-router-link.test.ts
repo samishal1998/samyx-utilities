@@ -1,6 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { observable } from '@trpc/server/observable';
-import { endpointRouterLink, typedEndpointRouterLink } from '../endpoint-router-link';
+import {
+  endpointRouterLink,
+  typedEndpointRouterLink,
+} from '../endpoint-router-link';
 import type { TRPCLink, Operation, TRPCClientError } from '@trpc/client';
 import type { AnyRouter } from '@trpc/server';
 
@@ -10,7 +13,7 @@ type MockRouter = AnyRouter;
 // Helper to create a mock operation
 const createMockOp = (
   path: string,
-  context: Record<string, unknown> = {}
+  context: Record<string, unknown> = {},
 ): Operation => ({
   id: 1,
   type: 'query',
@@ -33,7 +36,9 @@ describe('endpointRouterLink', () => {
         usedEndpoints.push(endpoint);
         return () => () =>
           observable((observer) => {
-            observer.next({ result: { type: 'data', data: endpoint } } as never);
+            observer.next({
+              result: { type: 'data', data: endpoint },
+            } as never);
             observer.complete();
             return () => {};
           });
@@ -186,7 +191,9 @@ describe('endpointRouterLink', () => {
     });
 
     expect(errors.length).toBe(1);
-    expect(errors[0].message).toContain('no endpoint mapping for router "unknown"');
+    expect(errors[0].message).toContain(
+      'no endpoint mapping for router "unknown"',
+    );
     expect(errors[0].message).toContain('no defaultEndpoint provided');
     expect(errors[0].message).toContain('Available mappings:');
   });
@@ -275,7 +282,9 @@ describe('endpointRouterLink', () => {
       },
       linkFactory: () => () => () =>
         observable((observer) => {
-          observer.next({ result: { type: 'data', data: expectedData } } as never);
+          observer.next({
+            result: { type: 'data', data: expectedData },
+          } as never);
           observer.complete();
           return () => {};
         }),
@@ -295,7 +304,9 @@ describe('endpointRouterLink', () => {
     });
 
     expect(results.length).toBe(1);
-    expect((results[0] as { result: { data: unknown } }).result.data).toEqual(expectedData);
+    expect((results[0] as { result: { data: unknown } }).result.data).toEqual(
+      expectedData,
+    );
   });
 
   it('should forward errors from the link', async () => {
@@ -378,7 +389,9 @@ describe('endpointRouterLink', () => {
         const secondLink: TRPCLink<MockRouter> = () => () =>
           observable((observer) => {
             executionOrder.push(`second-${endpoint}`);
-            observer.next({ result: { type: 'data', data: 'chained' } } as never);
+            observer.next({
+              result: { type: 'data', data: 'chained' },
+            } as never);
             observer.complete();
             return () => {};
           });
@@ -404,7 +417,9 @@ describe('endpointRouterLink', () => {
     // Both links should have executed in order
     expect(executionOrder).toEqual(['first-/api/users', 'second-/api/users']);
     expect(results.length).toBe(1);
-    expect((results[0] as { result: { data: string } }).result.data).toBe('chained');
+    expect((results[0] as { result: { data: string } }).result.data).toBe(
+      'chained',
+    );
   });
 });
 
