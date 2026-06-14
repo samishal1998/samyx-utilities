@@ -1,6 +1,6 @@
 {
   "name": "@samyx/trpc-utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "files": [
     "dist"
@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/samimishal/samyx-utilities.git",
-    "directory": "packages/filters"
+    "directory": "packages/trpc-utils"
   },
   "homepage": "https://github.com/samimishal/samyx-utilities#readme",
   "bugs": {

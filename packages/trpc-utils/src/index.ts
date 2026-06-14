@@ -1,6 +1,10 @@
 // Links
 export { switchLink } from './switch-link';
-export { endpointRouterLink, typedEndpointRouterLink } from './endpoint-router-link';
+export {
+  endpointRouterLink,
+  typedEndpointRouterLink,
+} from './endpoint-router-link';
+export { controlledLink } from './controlled-link';
 
 // Utilities
 export { createChain } from './create-chain';
@@ -20,4 +24,11 @@ export type {
   // endpointRouterLink types
   EndpointRouterLinkOptions,
   TypedEndpointRouterLinkOptions,
+  // controlledLink types
+  ControlledLinkOptions,
+  ControlledLinkContextFactory,
+  ControlledLinkContextFactoryOptions,
+  ControlledLinkHandler,
+  ControlledLinkHandlerOptions,
+  ControlledLinkHandlerResult,
 } from './types.js';

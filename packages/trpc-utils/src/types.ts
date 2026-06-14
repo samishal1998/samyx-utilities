@@ -1,5 +1,6 @@
 import type { TRPCLink, Operation } from '@trpc/client';
 import type { AnyRouter } from '@trpc/server';
+import type { AnyClientTypes } from '@trpc/server/unstable-core-do-not-import';
 
 /**
  * A single link or an array of links that will be chained together.
@@ -31,8 +32,9 @@ export type RequiredRouterMapping<TRouter extends AnyRouter> = {
 /**
  * Partial mapping type allowing some router names to be unmapped.
  */
-export type PartialRouterMapping<TRouter extends AnyRouter> =
-  Partial<RequiredRouterMapping<TRouter>>;
+export type PartialRouterMapping<TRouter extends AnyRouter> = Partial<
+  RequiredRouterMapping<TRouter>
+>;
 
 /**
  * Selector function context for switchLink.
@@ -53,7 +55,8 @@ export interface SwitchLinkSelectorContext<TContext = unknown> {
  * Can return a single link or an array of links that will be chained.
  */
 export type LinkFactory<TRouter extends AnyRouter> = (
-  endpoint: string
+  endpoint: string,
+  router: string,
 ) => LinkOrLinks<TRouter>;
 
 /**
@@ -115,7 +118,8 @@ export interface TypedEndpointRouterLinkOptions<
   TRouterNames extends string = RouterNames<TRouter>,
 > {
   /** Map of router names to endpoint URLs (type-safe with AppRouter) */
-  routerToEndpoint: Partial<Record<TRouterNames, string>> & Record<string, string>;
+  routerToEndpoint: Partial<Record<TRouterNames, string>> &
+    Record<string, string>;
   /** Default endpoint for unmapped routers */
   defaultEndpoint?: string;
   /** If true, throws an error for unmapped routers without a defaultEndpoint */
@@ -124,4 +128,79 @@ export interface TypedEndpointRouterLinkOptions<
   linkFactory?: LinkFactory<TRouter>;
   /** Options passed to the default link factory (headers, fetch, etc.) */
   linkOptions?: Omit<LinkFactoryOptions, 'url'>;
+}
+
+/**
+ * Options passed to controlledLink's createContext.
+ */
+export interface ControlledLinkContextFactoryOptions<TExtra = unknown> {
+  op: Operation;
+  extra?: TExtra;
+}
+
+/**
+ * Factory for building per-operation context for controlledLink.
+ */
+export type ControlledLinkContextFactory<
+  TContext = unknown,
+  TExtra = unknown,
+> = (
+  opts: ControlledLinkContextFactoryOptions<TExtra>,
+) => TContext | Promise<TContext>;
+
+/**
+ * Options passed to controlledLink's handler.
+ */
+export interface ControlledLinkHandlerOptions<
+  TContext = unknown,
+  TExtra = unknown,
+> {
+  op: Operation;
+  ctx: TContext;
+  extra?: TExtra;
+}
+
+/**
+ * Result returned by controlledLink's handler.
+ * `json` should match the tRPC response envelope.
+ */
+export interface ControlledLinkHandlerResult<
+  TMeta extends Record<string, unknown> | undefined =
+    | Record<string, unknown>
+    | undefined,
+> {
+  json: unknown;
+  meta?: TMeta;
+}
+
+/**
+ * Handler for controlledLink.
+ */
+export type ControlledLinkHandler<
+  TContext = unknown,
+  TExtra = unknown,
+  TMeta extends Record<string, unknown> | undefined =
+    | Record<string, unknown>
+    | undefined,
+> = (
+  opts: ControlledLinkHandlerOptions<TContext, TExtra>,
+) =>
+  | ControlledLinkHandlerResult<TMeta>
+  | Promise<ControlledLinkHandlerResult<TMeta>>;
+
+/**
+ * Configuration for controlledLink.
+ */
+export interface ControlledLinkOptions<
+  TRoot extends AnyClientTypes,
+  TContext = unknown,
+  TExtra = unknown,
+  TMeta extends Record<string, unknown> | undefined =
+    | Record<string, unknown>
+    | undefined,
+> {
+  transformer?: TRoot['transformer'];
+  createContext?: ControlledLinkContextFactory<TContext, TExtra>;
+  handler: ControlledLinkHandler<TContext, TExtra, TMeta>;
+  extra?: TExtra;
 }

@@ -1,5 +1,10 @@
 import { observable } from '@trpc/server/observable';
-import { httpBatchLink, TRPCClientError, type TRPCLink, type OperationLink } from '@trpc/client';
+import {
+  httpBatchLink,
+  TRPCClientError,
+  type TRPCLink,
+  type OperationLink,
+} from '@trpc/client';
 import type { AnyRouter } from '@trpc/server';
 import { createChain } from './create-chain';
 import type {
@@ -13,7 +18,7 @@ import type {
  * Converts a single link or array of links to an array.
  */
 function asArray<TRouter extends AnyRouter>(
-  value: LinkOrLinks<TRouter>
+  value: LinkOrLinks<TRouter>,
 ): TRPCLink<TRouter>[] {
   return Array.isArray(value) ? value : [value];
 }
@@ -71,7 +76,7 @@ export function endpointRouterLink<
   // types don't always infer correctly with dynamic linkOptions
   const createLink: LinkFactory<TRouter> =
     linkFactory ??
-    ((endpoint: string) => {
+    ((endpoint: string, router: string) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return httpBatchLink({
         url: endpoint,
@@ -83,11 +88,14 @@ export function endpointRouterLink<
     // Cache for initialized link chains, keyed by endpoint URL
     const linkCache = new Map<string, OperationLink<TRouter>[]>();
 
-    const getInitializedLinks = (endpoint: string): OperationLink<TRouter>[] => {
+    const getInitializedLinks = (
+      endpoint: string,
+      router: string,
+    ): OperationLink<TRouter>[] => {
       let initializedLinks = linkCache.get(endpoint);
 
       if (!initializedLinks) {
-        const linksOrLink = createLink(endpoint);
+        const linksOrLink = createLink(endpoint, router);
         const links = asArray(linksOrLink);
         initializedLinks = links.map((link) => link(runtime));
         linkCache.set(endpoint, initializedLinks);
@@ -108,16 +116,16 @@ export function endpointRouterLink<
           const availableMappings = Object.keys(routerToEndpoint).join(', ');
           const errorMessage = strict
             ? `endpointRouterLink: no endpoint mapping for router "${routerName}" ` +
-              `and no defaultEndpoint provided. ` +
+              'and no defaultEndpoint provided. ' +
               `Available mappings: ${availableMappings || '(none)'}`
             : `endpointRouterLink: no endpoint for router "${routerName}". ` +
-              `Either add it to routerToEndpoint or provide a defaultEndpoint.`;
+              'Either add it to routerToEndpoint or provide a defaultEndpoint.';
 
           observer.error(TRPCClientError.from(new Error(errorMessage)));
           return;
         }
 
-        const links = getInitializedLinks(endpoint);
+        const links = getInitializedLinks(endpoint, routerName);
 
         // Use createChain to execute the link chain
         return createChain({ op, links }).subscribe(observer);
@@ -143,10 +151,10 @@ export function endpointRouterLink<
  * ```
  */
 export function typedEndpointRouterLink<TRouter extends AnyRouter>(
-  opts: TypedEndpointRouterLinkOptions<TRouter>
+  opts: TypedEndpointRouterLinkOptions<TRouter>,
 ): TRPCLink<TRouter> {
   return endpointRouterLink(
-    opts as EndpointRouterLinkOptions<TRouter, Record<string, string>>
+    opts as EndpointRouterLinkOptions<TRouter, Record<string, string>>,
   );
 }
 
